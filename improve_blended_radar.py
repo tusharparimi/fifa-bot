@@ -1,10 +1,12 @@
-#trying to make the blended radar more visible during game (if possible)
+#TODO: trying to make the blended radar more visible during game (if possible)
+# radar becomes less opaque when game action is happening near side (side of radar)
 
 import cv2
 import numpy as np
+from pathlib import Path
 
 #image = cv2.imread('.\\data\\images\\1721154781-443667.png')
-image = cv2.imread('.\\data\\images\\1721172524-810401.png')
+image = cv2.imread(Path('.\\data\\images\\1721172524-810401.png'))
 print(image.shape)
 
 cv2.imshow('img', image)

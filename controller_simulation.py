@@ -4,6 +4,10 @@ from inputs import devices
 import time
 import pygetwindow as gw
 
+#TODO: write code that can play take in manual and simulated(AI) controls and play the game 
+# (preferably a toggle 't' button to switch between manual and AI)
+
+ 
 # just playing aroung for now
 
 gamepad = vg.VX360Gamepad()

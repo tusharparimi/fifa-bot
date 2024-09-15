@@ -1,8 +1,9 @@
 import cv2
 import os
 import numpy as np
+from pathlib import Path
 
-img1 = cv2.imread('.\\data\images\\1721359081-8094513.png', cv2.IMREAD_GRAYSCALE)
+img1 = cv2.imread(Path('.\\data\images\\1721359081-8094513.png'), cv2.IMREAD_GRAYSCALE)
 print(img1.shape)
 cv2.imshow('img1', img1)
 #cv2.waitKey(0)
@@ -16,12 +17,12 @@ kp1, des1 = sift.detectAndCompute(img1, None)
 # cv2.imshow('res', res)
 # cv2.waitKey(0)
 match_counts_arr = []
-files = os.listdir('.\\data\\images\\')
+files = os.listdir(Path('.\\data\\images\\'))
 for each in files[:7000]:
     match_counts = 0
     #print(count)
     #count = count+1
-    img2 = cv2.imread('.\\data\\images\\' + each, cv2.IMREAD_GRAYSCALE)
+    img2 = cv2.imread(Path('.\\data\\images\\') + each, cv2.IMREAD_GRAYSCALE)
     #print(img2.shape)
     kp2, des2 = sift.detectAndCompute(img2,None)
 
@@ -69,6 +70,6 @@ for each in files[:7000]:
                     cv2.waitKey(1)
 
 print(np.array(match_counts_arr).shape)
-print(np.array(match_counts_arr).mean())  # 5-8 values for threshold matches count to clean data
+print(np.array(match_counts_arr).mean())  # RESULT: 5-8 values for threshold match_counts to clean data
 
 

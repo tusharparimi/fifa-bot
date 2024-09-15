@@ -5,6 +5,7 @@ import os
 import cv2
 import numpy as np
 import functions
+from pathlib import Path
 
 
 class DataRecorder():
@@ -25,7 +26,7 @@ class DataRecorder():
         cv_img = np.uint8(cv_img)
         #cv_img = cv2.Canny(cv_img, 100, 200)
         #cv_img = cv2.resize(cv_img, (0, 0), fx = 1/4, fy = 1/4)
-        cv2.imwrite(img_dir_path + '\\' + str(self.TimeStamp).replace('.', '-') + '.png', cv_img)
+        cv2.imwrite(Path(img_dir_path, str(self.TimeStamp).replace('.', '-') + '.png'), cv_img)
 
         dict_data = {'tstamp':self.TimeStamp, 'lx':self.xc_object.LeftJoystickX, 'ly':self.xc_object.LeftJoystickY, 'a':self.xc_object.A, 'b':self.xc_object.B}
         functions.log_csvfile(dict_data, csv_path)
@@ -33,7 +34,7 @@ class DataRecorder():
 if __name__ == '__main__':
     data_recorder = DataRecorder()
     while True:
-        data_recorder.record('.\\data\\images', '.\\data\\controller.csv')
+        data_recorder.record(Path('.\\data\\images'), Path('.\\data\\controller.csv'))
         
         
 
