@@ -17,7 +17,7 @@ print("% of images removed: ", round(((num_images - num_cleaned_images)/num_imag
 # num templates = 2
 print("\nnum templates = ", 2)
 # num images after cleaning
-with open(Path(r"data\cleaned_images_2temp.txt"), "r") as file:
+with open(Path(r"data\cleaned_images_2temp_testing.txt"), "r") as file:
     lines = file.readlines()
     print("num images after cleaning: ", num_cleaned_images_2temp := len(lines))
 # % of images removed
