@@ -3,10 +3,11 @@ import os
 import numpy as np
 from pathlib import Path
 
-img1 = cv2.imread(Path('.\\data\images\\1721359081-8094513.png'), cv2.IMREAD_GRAYSCALE)
+img1 = cv2.imread(Path(r'.\templates\1721616963-1830087.png'), cv2.IMREAD_GRAYSCALE)
+img1 = cv2.Canny(img1, 100, 200)
 print(img1.shape)
 cv2.imshow('img1', img1)
-#cv2.waitKey(0)
+cv2.waitKey(0)
 
 #gray = cv2.cvtColor(img1, cv2.COLOR_BGR2GRAY)
 
@@ -22,7 +23,8 @@ for each in files[:7000]:
     match_counts = 0
     #print(count)
     #count = count+1
-    img2 = cv2.imread(Path('.\\data\\images\\') + each, cv2.IMREAD_GRAYSCALE)
+    img2 = cv2.imread(Path('.\\data\\images\\', each), cv2.IMREAD_GRAYSCALE)
+    img2 = cv2.Canny(img2, 100, 200)
     #print(img2.shape)
     kp2, des2 = sift.detectAndCompute(img2,None)
 
@@ -70,6 +72,8 @@ for each in files[:7000]:
                     cv2.waitKey(1)
 
 print(np.array(match_counts_arr).shape)
-print(np.array(match_counts_arr).mean())  # RESULT: 5-8 values for threshold match_counts to clean data
+print(np.array(match_counts_arr).mean())  
 
+# RESULT for rgb: 5-8 values for threshold match_counts to clean data
+# RESULT for edgemaps: 14 (mean for one test run) for threshold match_counts to clean data
 

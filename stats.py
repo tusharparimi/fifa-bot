@@ -5,6 +5,7 @@ from pathlib import Path
 files = os.listdir(Path(r"data\images"))
 print("num images before cleaning: ", num_images := len(files))
 
+print("\nRGB based: ---------------------------------------------------")
 # num templates = 1
 print("\nnum templates = ", 1)
 # num images after cleaning
@@ -18,6 +19,16 @@ print("% of images removed: ", round(((num_images - num_cleaned_images)/num_imag
 print("\nnum templates = ", 2)
 # num images after cleaning
 with open(Path(r"data\cleaned_images_2temp_testing.txt"), "r") as file:
+    lines = file.readlines()
+    print("num images after cleaning: ", num_cleaned_images_2temp := len(lines))
+# % of images removed
+print("% of images removed: ", round(((num_images - num_cleaned_images_2temp)/num_images)*100, 2), " %")
+
+print("\nEDGE MAP based: ---------------------------------------------------")
+# num templates = 2
+print("\nnum templates = ", 2)
+# num images after cleaning
+with open(Path(r"data\cleaned_images_2temp_edgemaps.txt"), "r") as file:
     lines = file.readlines()
     print("num images after cleaning: ", num_cleaned_images_2temp := len(lines))
 # % of images removed

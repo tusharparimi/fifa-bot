@@ -1,14 +1,18 @@
 from pathlib import Path
 import cv2
 import os
-import sys
+#import sys
 #import numpy as np
+
+# USE edge_maps flag
+use_edge_maps = True
 
 # read and compute sift keypoints and descriptors for templates
 templates = []
 template_kp_and_des = []
 for template_name in os.listdir(Path(r'.\templates')):
-    template = cv2.imread(Path(r'.\templates', template_name), cv2.IMREAD_GRAYSCALE)
+    template = cv2.Canny(cv2.imread(Path(r'.\templates', template_name), cv2.IMREAD_GRAYSCALE), 100, 200) \
+        if use_edge_maps else cv2.imread(Path(r'.\templates', template_name), cv2.IMREAD_GRAYSCALE)
     templates.append(template)
     sift = cv2.SIFT_create(contrastThreshold=0.12)
     template_kp_and_des.append(sift.detectAndCompute(template, None))
@@ -26,7 +30,8 @@ flann = cv2.FlannBasedMatcher(index_params,search_params)
 # parsing each image, matching with templates and appending the clean image list
 for each in files:
     match_counts = 0
-    img = cv2.imread(Path(dir_path, each), cv2.IMREAD_GRAYSCALE)
+    img = cv2.Canny(cv2.imread(Path(dir_path, each), cv2.IMREAD_GRAYSCALE), 100, 200) \
+        if use_edge_maps else cv2.imread(Path(dir_path, each), cv2.IMREAD_GRAYSCALE)
     kp, des = sift.detectAndCompute(img, None)
     template_matched = True
     
@@ -53,7 +58,7 @@ for each in files:
             matchesMask = matchesMask,
             flags = cv2.DrawMatchesFlags_DEFAULT)
 
-            if match_counts>=6: #len(matches)!=0:
+            if match_counts >= (14 if use_edge_maps else 6): 
                 template_matched = template_matched and True
             else:
                 template_matched = template_matched and False
@@ -69,7 +74,7 @@ for each in files:
 
 # adding clean image names to a txt file
 print(len(clean_image_names))
-with open(Path(".\\data\\cleaned_images_2temp_testing.txt"), "w") as txt_file:
+with open(Path(".\\data\\cleaned_images_2temp_edgemaps.txt"), "w") as txt_file:
     for name in clean_image_names:
         txt_file.write(name + "\n")   
 
