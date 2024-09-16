@@ -26,7 +26,7 @@ print("% of images removed: ", round(((num_images - num_cleaned_images_2temp)/nu
 
 print("\nEDGE MAP based: ---------------------------------------------------")
 # num templates = 2
-print("\nnum templates = ", 2)
+print("\nnum templates = ", 2, "match_threshold = ", 14)
 # num images after cleaning
 with open(Path(r"data\cleaned_images_2temp_edgemaps.txt"), "r") as file:
     lines = file.readlines()
@@ -34,6 +34,14 @@ with open(Path(r"data\cleaned_images_2temp_edgemaps.txt"), "r") as file:
 # % of images removed
 print("% of images removed: ", round(((num_images - num_cleaned_images_2temp)/num_images)*100, 2), " %")
 
+# num templates = 2
+print("\nnum templates = ", 2, "match_threshold = ", 20)
+# num images after cleaning
+with open(Path(r"data\cleaned_images_2temp_edgemaps_20.txt"), "r") as file:
+    lines = file.readlines()
+    print("num images after cleaning: ", num_cleaned_images_2temp := len(lines))
+# % of images removed
+print("% of images removed: ", round(((num_images - num_cleaned_images_2temp)/num_images)*100, 2), " %")
 
 
 
