@@ -1,10 +1,20 @@
 import cv2
 import os
 from pathlib import Path
+import argparse
 
-image_dir = Path(".\\data\\images")
+ap = argparse.ArgumentParser()
+ap.add_argument("-p", "--path", help="path of image file dir", \
+                default=r".\data\images", dest="path")
+ap.add_argument("-tp", "--txt_path", help="path of text file with clean image file names", \
+                dest="txtpath")
+args = ap.parse_args()
 
-txt_file_path = Path(".\\data\\cleaned_images_temp1_th14_ntemp1_nth10_edge.txt")
+assert args.txtpath is not None, "text file path is required"
+
+image_dir = Path(args.path)
+txt_file_path = Path(args.txtpath)
+
 with open(txt_file_path, 'r') as file:
     for image_name in file:
         print(image_name)
