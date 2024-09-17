@@ -7,25 +7,56 @@ import argparse
 
 # extract command line arguments
 ap = argparse.ArgumentParser()
-ap.add_argument("-m", "--mode", required=True, help="mode of images (gray or edgemaps)",
-                choices=['gray', 'edge'], default='rgb', dest="mode")
-ap.add_argument("-t", "--threshold", required=True, help="matches count threshold for cleaning",
+ap.add_argument("-m", "--mode", help="mode of images (gray or edgemaps)",
+                choices=['gray', 'edge'], default='gray', dest="mode")
+ap.add_argument("-th", "--threshold", help="matches count threshold for cleaning",
                 type=int, dest="threshold")
-args = vars(ap.parse_args())
+ap.add_argument("-nt", "--negtemplates", help="flag to use negative templates",
+                dest="neg_templates", action="store_true")
+ap.add_argument("-nth", "--negthreshold", help="matches count threshold for cleaning",
+                type=int, dest="neg_threshold")
+# print(ap.parse_args())
+# print(ap.parse_args().threshold, type(ap.parse_args().threshold))
+# print(ap.parse_args().neg_templates, type(ap.parse_args().neg_templates))
+args = ap.parse_args()
+
+# print(args.neg_threshold, type(args.neg_threshold))
+# print(args.neg_templates, type(args.neg_templates))
+
+if (args.neg_templates == False):
+    assert (args.neg_threshold is None), "only use neg_threshold with neg_templates"
 
 # flags
-use_edgemaps = True if args["mode"]=="edge" else False
-threshold = args["threshold"]
+use_edgemaps = True if args.mode=="edge" else False
+threshold = args.threshold
+use_negtemplates = args.neg_templates
+neg_threshold = args.neg_threshold
+# print(use_edgemaps)
+# print(threshold)
+# print(use_negtemplates)
+# print(neg_threshold)
 
 # read and compute sift keypoints and descriptors for templates
 templates = []
 template_kp_and_des = []
-for template_name in os.listdir(Path(r'.\templates')):
+for template_name in os.listdir(Path(r'.\templates'))[0:1]:
     template = cv2.Canny(cv2.imread(Path(r'.\templates', template_name), cv2.IMREAD_GRAYSCALE), 100, 200) \
         if use_edgemaps else cv2.imread(Path(r'.\templates', template_name), cv2.IMREAD_GRAYSCALE)
     templates.append(template)
     sift = cv2.SIFT_create(contrastThreshold=0.12)
     template_kp_and_des.append(sift.detectAndCompute(template, None))
+
+neg_templates = []
+neg_template_kp_and_des = []
+if use_negtemplates:
+    for template_name in os.listdir(Path(r'.\templates\neg')):
+        template = cv2.Canny(cv2.imread(Path(r'.\templates\neg', template_name), cv2.IMREAD_GRAYSCALE), 100, 200) \
+            if use_edgemaps else cv2.imread(Path(r'.\templates\neg', template_name), cv2.IMREAD_GRAYSCALE)
+        neg_templates.append(template)
+        sift = cv2.SIFT_create(contrastThreshold=0.12)
+        neg_template_kp_and_des.append(sift.detectAndCompute(template, None))
+
+#print(len(templates), len(neg_templates))
 
 clean_image_names = []
 dir_path = Path(".\\data\\images\\")
@@ -73,12 +104,46 @@ for each in files:
             else:
                 template_matched = template_matched and False
     
+    if use_negtemplates:
+        for temp_kp, temp_des in neg_template_kp_and_des:
+            if len(des)!=0 and len(temp_kp) >=2 and len(kp) >=2:
+                neg_matches = flann.knnMatch(temp_des,des,k=2)
+                neg_matchesMask = [[0,0] for i in range(len(neg_matches))]
+
+                # ratio test as per Lowe's paper
+                for i,(m,n) in enumerate(neg_matches):
+                    if m.distance < 0.7*n.distance:
+                        neg_matchesMask[i]=[1,0]
+
+                match_counts = 0
+                for ele in neg_matchesMask:
+                    if ele == [1, 0]:
+                        match_counts = match_counts + 1
+
+                neg_draw_params = dict(matchColor = (0,255,0),
+                singlePointColor = (255,0,0),
+                matchesMask = neg_matchesMask,
+                flags = cv2.DrawMatchesFlags_DEFAULT)
+
+                if match_counts <= (neg_threshold if use_edgemaps else 6): 
+                    template_matched = template_matched and True
+                else:
+                    template_matched = template_matched and False
+
     if template_matched:
         for i in range(len(templates)):
-            template_matches = cv2.drawMatchesKnn(templates[i], template_kp_and_des[i][0], img, kp, matches,None, **draw_params)
+            template_matches = cv2.drawMatchesKnn(templates[i], template_kp_and_des[i][0], \
+                                                  img, kp, matches,None, **draw_params)
             if template_matches is not None:
                 cv2.imshow(f'template{i} matches', template_matches)
                 cv2.waitKey(1)
+        if use_negtemplates:
+            for i in range(len(neg_templates)):
+                template_matches = cv2.drawMatchesKnn(neg_templates[i], neg_template_kp_and_des[i][0], \
+                                                    img, kp, neg_matches,None, **neg_draw_params)
+                if template_matches is not None:
+                    cv2.imshow(f'neg_template{i} matches', template_matches)
+                    cv2.waitKey(1)
         clean_image_names.append(each)
         print(each)
 

@@ -4,7 +4,7 @@ from pathlib import Path
 
 image_dir = Path(".\\data\\images")
 
-txt_file_path = Path(".\\data\\cleaned_images_2temp_edgemaps_20.txt")
+txt_file_path = Path(".\\data\\cleaned_images_temp1_th14_ntemp1_nth10_edge.txt")
 with open(txt_file_path, 'r') as file:
     for image_name in file:
         print(image_name)

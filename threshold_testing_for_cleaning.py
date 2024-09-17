@@ -3,7 +3,7 @@ import os
 import numpy as np
 from pathlib import Path
 
-img1 = cv2.imread(Path(r'.\templates\1721616963-1830087.png'), cv2.IMREAD_GRAYSCALE)
+img1 = cv2.imread(Path(r'.\templates\neg\1721616961-4119582.png'), cv2.IMREAD_GRAYSCALE)
 img1 = cv2.Canny(img1, 100, 200)
 print(img1.shape)
 cv2.imshow('img1', img1)
@@ -76,4 +76,5 @@ print(np.array(match_counts_arr).mean())
 
 # RESULT for rgb: 5-8 values for threshold match_counts to clean data
 # RESULT for edgemaps: 14 (mean for one test run) for threshold match_counts to clean data
+# For neg templates: 10 and above matches means dont use that image
 
