@@ -3,10 +3,19 @@ import cv2
 import os
 #import sys
 #import numpy as np
+import argparse
 
-# USE edge_maps flag
-use_edgemaps = True
-edgemap_threshold = 20
+# extract command line arguments
+ap = argparse.ArgumentParser()
+ap.add_argument("-m", "--mode", required=True, help="mode of images (gray or edgemaps)",
+                choices=['gray', 'edge'], default='rgb', dest="mode")
+ap.add_argument("-t", "--threshold", required=True, help="matches count threshold for cleaning",
+                type=int, dest="threshold")
+args = vars(ap.parse_args())
+
+# flags
+use_edgemaps = True if args["mode"]=="edge" else False
+threshold = args["threshold"]
 
 # read and compute sift keypoints and descriptors for templates
 templates = []
@@ -59,7 +68,7 @@ for each in files:
             matchesMask = matchesMask,
             flags = cv2.DrawMatchesFlags_DEFAULT)
 
-            if match_counts >= (edgemap_threshold if use_edgemaps else 6): 
+            if match_counts >= (threshold if use_edgemaps else 6): 
                 template_matched = template_matched and True
             else:
                 template_matched = template_matched and False
@@ -75,7 +84,7 @@ for each in files:
 
 # adding clean image names to a txt file
 print(len(clean_image_names))
-with open(Path(".\\data\\cleaned_images_2temp_edgemaps_20.txt"), "w") as txt_file:
+with open(Path(".\\data\\testing.txt"), "w") as txt_file:
     for name in clean_image_names:
         txt_file.write(name + "\n")   
 
