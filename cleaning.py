@@ -1,8 +1,6 @@
 from pathlib import Path
 import cv2
 import os
-#import sys
-#import numpy as np
 import argparse
 
 # extract command line arguments
@@ -19,13 +17,7 @@ ap.add_argument("-nt", "--negtemplates", help="flag to use negative templates in
                 dest="neg_templates", action="store_true")
 ap.add_argument("-nth", "--negthreshold", help="matches count threshold for sift with nt",
                 type=int, dest="neg_threshold")
-# print(ap.parse_args())
-# print(ap.parse_args().threshold, type(ap.parse_args().threshold))
-# print(ap.parse_args().neg_templates, type(ap.parse_args().neg_templates))
 args = ap.parse_args()
-
-# print(args.neg_threshold, type(args.neg_threshold))
-# print(args.neg_templates, type(args.neg_templates))
 
 if args.algo == 'mt':
     assert (args.neg_threshold is None) and (args.neg_templates == False), \
@@ -44,10 +36,6 @@ use_negtemplates = args.neg_templates
 neg_threshold = args.neg_threshold
 algo = args.algo
 method = args.method
-# print(use_edgemaps)
-# print(threshold)
-# print(use_negtemplates)
-# print(neg_threshold)
 
 clean_image_names = []
 dir_path = Path(".\\data\\images\\")
