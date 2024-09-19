@@ -1,28 +1,65 @@
 import pygetwindow as gw
 import pyautogui
+import keyboard
 import cv2
 import numpy as np
 import threading
+from functions import get_cursor_pos
+from pathlib import Path
 
 # print(gw.getAllTitles())
 # #print(gw.getAllWindows())
 
 
 class ScreenshotTaker():
-    WIN_SIZE = (int(2560), int(1600))
-    #WIN_SIZE = (int(), int())
-    #WIN_TITLE = 'FC 24' #'PS Remote Play'
-    WIN_TITLE = 'PS Remote Play'
-    WIN_TOPLEFT = (0,0) #(500,500)
+    # WIN_SIZE = (int(2560), int(1600))
+    # #WIN_SIZE = (int(), int())
+    # #WIN_TITLE = 'FC 24' #'PS Remote Play'
+    # WIN_TITLE = 'PS Remote Play'
+    # WIN_TOPLEFT = (0, 0) #(500, 500)
 
-    def __init__(self):
+    def __init__(self, win_title='PS Remote Play', win_topleft=(0, 0), win_size=(865, 515)):
 
-        self.img = np.ones(shape=(int(1600), int(2560), 3))
-        self.TimeStamp = 0
+        self.img = None
+        self.win_title = win_title
+        self.win_topleft = win_topleft
+        self.win_size = win_size
 
         thread = threading.Thread(target=self.screenshot_taker, args=())
         thread.daemon = True
         thread.start()
+
+    #TODO: WIP func that returns roi by manual selection or if precomputed roi in text file 
+    # for given win_size and win_topleft 
+    def compute_roi(self, use_precomputed_roi=True):
+        pass 
+        roi = []
+        if use_precomputed_roi:
+            with open(Path(".\\roi.txt"), 'r') as file:
+                for line in file.readlines():
+                    if line == f"({self.win_topleft[0]}, {self.win_topleft[0]}), \
+                        ({self.win_size[0]}, {self.win_size[1]})":
+                        s = ":".split(line)[1]
+                        #roi.append()
+            pass
+        else:
+            print("Place cursor on the topleft of ROI and press 'l' to lock: ")
+            keyboard.wait("l")
+            x, y = get_cursor_pos() 
+            print(f"({x},{y}) locked as topleft!")
+            roi.append((x, y))
+            print("Place cursor on the bottomright of ROI and press 'l' to lock: ")
+            keyboard.wait("l")
+            x, y = get_cursor_pos() 
+            print(f"({x},{y}) locked as bottomright!")
+            roi.append((x, y))
+            with open(Path(".\\roi.txt"), "a") as file:
+                    file.write(f"({self.win_topleft[0]}, {self.win_topleft[0]}), \
+                        ({self.win_size[0]}, {self.win_size[1]})" + ":" + \
+                            str(roi[0])+ ", " + str(roi[1]) + "\n")
+
+        return roi           
+            
 
 
     def show(self):
