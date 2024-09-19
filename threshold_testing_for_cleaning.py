@@ -66,7 +66,8 @@ for each in files[:7000]:
             flags = cv2.DrawMatchesFlags_DEFAULT)
 
             if len(matches)!=0:
-                img3 = cv2.drawMatchesKnn(img1,kp1,img2,kp2,matches,None,**draw_params)
+                img3 = cv2.drawMatchesKnn(img1,kp1,img2,kp2,matches,None, \
+                                          **draw_params)
                 if img3 is not None:
                     cv2.imshow('img3', img3)#,plt.show()
                     cv2.waitKey(1)
