@@ -77,4 +77,5 @@ print(np.array(match_counts_arr).mean())
 # RESULT for rgb: 5-8 values for threshold match_counts to clean data
 # RESULT for edgemaps: 14 (mean for one test run) for threshold match_counts to clean data
 # For neg templates: 10 and above matches means dont use that image
+# for cv2.matchTemplate() use threshold <= 25e7
 

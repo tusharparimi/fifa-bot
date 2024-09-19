@@ -10,7 +10,9 @@ import threading
 
 class ScreenshotTaker():
     WIN_SIZE = (int(2560), int(1600))
-    WIN_TITLE = 'FC 24'
+    #WIN_SIZE = (int(), int())
+    #WIN_TITLE = 'FC 24' #'PS Remote Play'
+    WIN_TITLE = 'PS Remote Play'
     WIN_TOPLEFT = (0,0) #(500,500)
 
     def __init__(self):
@@ -40,7 +42,8 @@ class ScreenshotTaker():
             fifa_window.size = ScreenshotTaker.WIN_SIZE
             fifa_window.topleft = ScreenshotTaker.WIN_TOPLEFT
 
-            img = pyautogui.screenshot(region=(fifa_window.top, fifa_window.left, fifa_window.width, fifa_window.height))
+            img = pyautogui.screenshot(region=(fifa_window.top, fifa_window.left, \
+                                               fifa_window.width, fifa_window.height))
             img = cv2.cvtColor(np.array(img), cv2.COLOR_RGB2BGR)
             self.img = img
             #self.img = cv2.resize(img, (1280, 800), interpolation = cv2.INTER_AREA)
@@ -49,7 +52,7 @@ class ScreenshotTaker():
 if __name__ == '__main__':
     staker = ScreenshotTaker()
     while True:
-        #staker.show() 
-        staker.save_screenshot()
+        staker.show() 
+        #staker.save_screenshot()
             
 
