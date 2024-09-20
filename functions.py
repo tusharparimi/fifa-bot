@@ -21,8 +21,14 @@ def get_cursor_pos():
     windll.user32.GetCursorPos(byref(cursor))
     return (cursor.x, cursor.y)
 
-def str2roi(s):
-    pass
+def str2tuplelist(s):
+    tuple_list = []
+    for each in s.split(", "):
+        tuple_list.append(tuple([int(item) for item in each[1:-1].split(" ")]))
+    return tuple_list
 
-def roi2str(t):
-    pass
+def tuplelist2str(tuple_list):
+    s = ""
+    for each in tuple_list:
+        s = s + f"({each[0]} {each[1]}), "
+    return s[:-2]
