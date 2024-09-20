@@ -21,11 +21,9 @@ class DataRecorder():
 
         self.TimeStamp = time.time()
 
-        cv_img = self.st_object.img[1280:1510, 1280-205:1280+202, :] #[625:750, 540:720, :]
+        cv_img = self.st_object.img
         cv_img = cv2.resize(cv_img, (400, 230))
         cv_img = np.uint8(cv_img)
-        #cv_img = cv2.Canny(cv_img, 100, 200)
-        #cv_img = cv2.resize(cv_img, (0, 0), fx = 1/4, fy = 1/4)
         cv2.imwrite(Path(img_dir_path, \
                          str(self.TimeStamp).replace('.', '-') + '.png'), cv_img)
 
