@@ -2,6 +2,13 @@ import os
 from csv import DictWriter
 from csv import writer
 from ctypes import windll, wintypes, byref
+import keyboard
+from pathlib import Path
+import matplotlib.pyplot as plt
+import cv2
+import numpy as np
+import pyautogui
+
 
 def log_csvfile(dict_data,csvfile_name):
     if os.path.exists(csvfile_name):
@@ -32,3 +39,64 @@ def tuplelist2str(tuple_list):
     for each in tuple_list:
         s = s + f"({each[0]} {each[1]}), "
     return s[:-2]
+
+def select_roi(win_topleft=(-6, 0), win_size=(865, 515)): 
+    roi = []
+    try:
+        with open(Path(".\\roi.txt"), 'r') as file:
+            for line in file.readlines():
+                if (line.split(":")[0]) == \
+                    tuplelist2str([win_topleft, win_size]):
+                    print(f"Used roi, detected! {line.split(":")[1][:-1]}")
+                    #print("To re-use roi (Press 'y'), else next (Press 'n')")
+                    print("Press [y/n] [to use detected ROI/see next saved ROI]")
+                    while True:
+                        event = keyboard.read_event()
+                        if event.event_type == keyboard.KEY_DOWN and event.name == 'y':
+                            return str2tuplelist(line.split(":")[1][:-1])
+                        if event.event_type == keyboard.KEY_DOWN and event.name == 'n':
+                            break
+    except FileNotFoundError:
+        print("\nNo pre-computed ROIs available")
+
+    roi_selected = False
+    while not roi_selected:
+        print("\nManually select new ROI...")
+        #print("Place cursor on the topleft of ROI and press 'l' to lock: ")
+        print("\nPlace cursor on the topleft of ROI and Press [l]: ")
+        keyboard.wait("l")
+        x, y = get_cursor_pos() 
+        print(f"({x},{y}) locked as topleft!")
+        roi.append((x, y))
+        #print("Place cursor on the bottomright of ROI and press 'l' to lock: ")
+        print("\nPlace cursor on the bottomright of ROI and Press [l]: ")
+        keyboard.wait("l")
+        x, y = get_cursor_pos() 
+        print(f"({x},{y}) locked as bottomright!")
+        roi.append((x, y))
+        img = pyautogui.screenshot(region=(roi[0][0], roi[0][1], (roi[1][0]-roi[0][0]), \
+                                            (roi[1][1]-roi[0][1])))
+        img = cv2.cvtColor(np.array(img), cv2.COLOR_RGB2BGR)
+        plt.imshow(img) 
+        plt.show(block=False)
+        plt.pause(0.1)
+
+        #print("\nTo save this roi, (Press 'y') else to select again (Press 'n')")
+        print("\nPress [y/s/n] [use ROI/save and use ROI/select new ROI]")
+        while True:
+            event = keyboard.read_event()
+            if event.event_type == keyboard.KEY_DOWN and event.name == 'y':
+                roi_selected = True
+                break
+            if event.event_type == keyboard.KEY_DOWN and event.name == 's':
+                with open(Path(".\\roi.txt"), "a") as file:
+                    file.write(tuplelist2str([win_topleft, win_size]) + ":" + \
+                            tuplelist2str(roi) + "\n")
+                roi_selected = True
+                break
+            if event.event_type == keyboard.KEY_DOWN and event.name == 'n':
+                roi = []
+                break
+        #cv2.destroyWindow("current roi")
+        plt.close()
+    return roi
