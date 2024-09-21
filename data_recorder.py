@@ -6,10 +6,10 @@ import cv2
 import numpy as np
 import functions
 from pathlib import Path
+import argparse
 
 
-class DataRecorder():
-    
+class DataRecorder():   
     def __init__(self):
         self.TimeStamp = 0
         self.xc_object = cn.Controller()
@@ -33,10 +33,20 @@ class DataRecorder():
         functions.log_csvfile(dict_data, csv_path)
 
 if __name__ == '__main__':
+    ap = argparse.ArgumentParser()
+    ap.add_argument("-p", "--path", help="path where image file need to be stored", \
+                    dest="path")
+    ap.add_argument("-csvp", "--csv_path", \
+                    help="path to csv file path where controller data needs to be stored", \
+                        dest="csvpath")
+    args = ap.parse_args()
+    
+    img_dir_path = Path(args.path)
+    csv_file_path = Path(args.csvpath)
+
     data_recorder = DataRecorder()
     while True:
-        data_recorder.record(Path('.\\data\\images1'), \
-                             Path('.\\data\\controller.csv'))
+        data_recorder.record(img_dir_path, csv_file_path)
         
         
 
