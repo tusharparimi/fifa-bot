@@ -4,7 +4,7 @@ import time
 import os
 import cv2
 import numpy as np
-import functions
+from functions import select_roi, log_csvfile
 from pathlib import Path
 import argparse
 import keyboard
@@ -14,7 +14,7 @@ class DataRecorder():
     def __init__(self, game_name):
         self.TimeStamp = 0
         self.xc_object = cn.Controller()
-        roi = functions.select_roi(game_name)
+        roi = select_roi(game_name)
         self.st_object = st.ScreenshotTaker(roi)
 
     def record(self, img_dir_path, csv_path, img_shape=(400, 230)):
@@ -30,12 +30,30 @@ class DataRecorder():
             cv2.imwrite(Path(img_dir_path, \
                             str(self.TimeStamp).replace('.', '-') + '.png'), cv_img)
 
-            dict_data = {'tstamp':self.TimeStamp, \
-                        'lx':self.xc_object.LeftJoystickX, \
-                        'ly':self.xc_object.LeftJoystickY, \
-                            'a':self.xc_object.A, \
-                            'b':self.xc_object.B}
-            functions.log_csvfile(dict_data, csv_path)
+            dict_data = {'tstamp' : self.TimeStamp, 
+                        'lx' : self.xc_object.LeftJoystickY,
+                        'ly' : self.xc_object.LeftJoystickX,
+                        'rx' : self.xc_object.RightJoystickY,
+                        'ry' : self.xc_object.RightJoystickX,
+                        'lt' : self.xc_object.LeftTrigger,
+                        'rt' : self.xc_object.RightTrigger,
+                        'lb' : self.xc_object.LeftBumper,
+                        'rb' : self.xc_object.RightBumper,
+                        'a' : self.xc_object.A,
+                        'x' : self.xc_object.X,
+                        'y' : self.xc_object.Y,
+                        'b' : self.xc_object.B,
+                        'lthumb' : self.xc_object.LeftThumb,
+                        'rthumb' : self.xc_object.RightThumb,
+                        'back' : self.xc_object.Back,
+                        'start' : self.xc_object.Start,
+                        'ldpad' : self.xc_object.LeftDPad,
+                        'rdpad' : self.xc_object.RightDPad,
+                        'udpad' : self.xc_object.UpDPad,
+                        'ddpad' : self.xc_object.DownDPad
+                        }
+
+            log_csvfile(dict_data, csv_path)
 
 if __name__ == '__main__':
     ap = argparse.ArgumentParser()
