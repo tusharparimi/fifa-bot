@@ -63,6 +63,7 @@ def select_roi(game_name, win_topleft=(-6, 0), win_size=(865, 515)):
                         event = keyboard.read_event()
                         if event.event_type == keyboard.KEY_DOWN and event.name == 'y':
                             print("\nROI selected !!!")
+                            plt.close()
                             return str2tuplelist(line.split(":")[2][:-1])
                         if event.event_type == keyboard.KEY_DOWN and event.name == 'n':
                             roi = []
