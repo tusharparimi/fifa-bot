@@ -53,6 +53,7 @@ def select_roi(win_topleft=(-6, 0), win_size=(865, 515)):
                     while True:
                         event = keyboard.read_event()
                         if event.event_type == keyboard.KEY_DOWN and event.name == 'y':
+                            print("\nROI selected !!!")
                             return str2tuplelist(line.split(":")[1][:-1])
                         if event.event_type == keyboard.KEY_DOWN and event.name == 'n':
                             break
@@ -99,4 +100,5 @@ def select_roi(win_topleft=(-6, 0), win_size=(865, 515)):
                 break
         #cv2.destroyWindow("current roi")
         plt.close()
+    print("\nROI selected !!!")
     return roi
