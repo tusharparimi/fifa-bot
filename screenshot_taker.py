@@ -37,11 +37,10 @@ class ScreenshotTaker():
 if __name__ == '__main__':
     roi = select_roi()
     staker = ScreenshotTaker(roi=roi)
-    while True:
+    exit_flag = False
+    while not exit_flag:
         staker.show()
-        # TODO: for some reason uncommenting below code freezes the show() image
-        # event = keyboard.read_event()
-        # if event.event_type == keyboard.KEY_DOWN and event.name == 'esc':
-        #     break
+        if keyboard.is_pressed('esc'):
+            break 
     
 

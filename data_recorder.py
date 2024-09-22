@@ -7,6 +7,7 @@ import numpy as np
 import functions
 from pathlib import Path
 import argparse
+import keyboard
 
 
 class DataRecorder():   
@@ -47,6 +48,7 @@ if __name__ == '__main__':
     data_recorder = DataRecorder()
     while True:
         data_recorder.record(img_dir_path, csv_file_path)
-        
+        if keyboard.is_pressed('esc'):
+            break
         
 

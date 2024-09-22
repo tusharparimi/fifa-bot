@@ -1,6 +1,7 @@
 from inputs import get_gamepad
 import math
 import threading
+import keyboard
 
 class Controller():
     MAX_TRIG_VAL = math.pow(2, 8)
@@ -101,4 +102,5 @@ if __name__ == '__main__':
     joy = Controller()
     while True:
         print(joy.read())
-        #joy.log_to_csv('controller_data.csv')
+        if keyboard.is_pressed('esc'):
+            break
