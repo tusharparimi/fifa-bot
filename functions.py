@@ -49,6 +49,14 @@ def select_roi(game_name, win_topleft=(-6, 0), win_size=(865, 515)):
                     tuplelist2str([win_topleft, win_size]):
                     print(f"Used roi, detected for {line.split(":")[0]}! : " + \
                           f"{line.split(":")[2][:-1]}")
+                    roi = str2tuplelist(line.split(":")[2][:-1])
+                    img = pyautogui.screenshot(region=(roi[0][0], roi[0][1], \
+                                                       (roi[1][0]-roi[0][0]), \
+                                                        (roi[1][1]-roi[0][1])))
+                    #img = cv2.cvtColor(np.array(img), cv2.COLOR_RGB2BGR)
+                    plt.imshow(img) 
+                    plt.show(block=False)
+                    plt.pause(0.1)
                     #print("To re-use roi (Press 'y'), else next (Press 'n')")
                     print("Press [y/n] [to use detected ROI/see next saved ROI]")
                     while True:
@@ -57,7 +65,9 @@ def select_roi(game_name, win_topleft=(-6, 0), win_size=(865, 515)):
                             print("\nROI selected !!!")
                             return str2tuplelist(line.split(":")[2][:-1])
                         if event.event_type == keyboard.KEY_DOWN and event.name == 'n':
+                            roi = []
                             break
+                    plt.close()
     except FileNotFoundError:
         print("\nNo pre-computed ROIs available")
 
@@ -78,7 +88,7 @@ def select_roi(game_name, win_topleft=(-6, 0), win_size=(865, 515)):
         roi.append((x, y))
         img = pyautogui.screenshot(region=(roi[0][0], roi[0][1], (roi[1][0]-roi[0][0]), \
                                             (roi[1][1]-roi[0][1])))
-        img = cv2.cvtColor(np.array(img), cv2.COLOR_RGB2BGR)
+        #img = cv2.cvtColor(np.array(img), cv2.COLOR_RGB2BGR)
         plt.imshow(img) 
         plt.show(block=False)
         plt.pause(0.1)
