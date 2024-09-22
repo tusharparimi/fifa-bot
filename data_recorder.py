@@ -74,9 +74,11 @@ if __name__ == '__main__':
     game_name = args.game_name
     
     data_recorder = DataRecorder(game_name)
+    print("\nRecording data...\nPress [esc] to stop")
     while True:
         data_recorder.record(img_dir_path, csv_file_path, img_shape)
         if keyboard.is_pressed('esc'):
+            print("\nStopped Recording !")
             break
         
 
