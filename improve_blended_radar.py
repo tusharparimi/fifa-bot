@@ -2,7 +2,6 @@
 # radar becomes less opaque when game action is happening near side (side of radar)
 
 import cv2
-import numpy as np
 from pathlib import Path
 
 #image = cv2.imread('.\\data\\images\\1721154781-443667.png')

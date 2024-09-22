@@ -1,6 +1,6 @@
 import vgamepad as vg
-from inputs import get_gamepad
-from inputs import devices
+#from inputs import get_gamepad
+#from inputs import devices
 import time
 import pygetwindow as gw
 

@@ -1,12 +1,9 @@
-import pygetwindow as gw
 import pyautogui
 import keyboard
 import cv2
 import numpy as np
 import threading
 from functions import select_roi
-from pathlib import Path
-import matplotlib.pyplot as plt
 
 class ScreenshotTaker():
     def __init__(self, roi):
