@@ -40,21 +40,22 @@ def tuplelist2str(tuple_list):
         s = s + f"({each[0]} {each[1]}), "
     return s[:-2]
 
-def select_roi(win_topleft=(-6, 0), win_size=(865, 515)): 
+def select_roi(game_name, win_topleft=(-6, 0), win_size=(865, 515)): 
     roi = []
     try:
         with open(Path(".\\roi.txt"), 'r') as file:
             for line in file.readlines():
-                if (line.split(":")[0]) == \
+                if (line.split(":")[1]) == \
                     tuplelist2str([win_topleft, win_size]):
-                    print(f"Used roi, detected! {line.split(":")[1][:-1]}")
+                    print(f"Used roi, detected for {line.split(":")[0]}! : " + \
+                          f"{line.split(":")[2][:-1]}")
                     #print("To re-use roi (Press 'y'), else next (Press 'n')")
                     print("Press [y/n] [to use detected ROI/see next saved ROI]")
                     while True:
                         event = keyboard.read_event()
                         if event.event_type == keyboard.KEY_DOWN and event.name == 'y':
                             print("\nROI selected !!!")
-                            return str2tuplelist(line.split(":")[1][:-1])
+                            return str2tuplelist(line.split(":")[2][:-1])
                         if event.event_type == keyboard.KEY_DOWN and event.name == 'n':
                             break
     except FileNotFoundError:
@@ -91,8 +92,9 @@ def select_roi(win_topleft=(-6, 0), win_size=(865, 515)):
                 break
             if event.event_type == keyboard.KEY_DOWN and event.name == 's':
                 with open(Path(".\\roi.txt"), "a") as file:
-                    file.write(tuplelist2str([win_topleft, win_size]) + ":" + \
-                            tuplelist2str(roi) + "\n")
+                    file.write(game_name + ":" + \
+                               tuplelist2str([win_topleft, win_size]) + ":" + \
+                                tuplelist2str(roi) + "\n")
                 roi_selected = True
                 break
             if event.event_type == keyboard.KEY_DOWN and event.name == 'n':

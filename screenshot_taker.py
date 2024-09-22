@@ -35,7 +35,7 @@ class ScreenshotTaker():
             self.img = img
             
 if __name__ == '__main__':
-    roi = select_roi()
+    roi = select_roi(game_name='fc24')
     staker = ScreenshotTaker(roi=roi)
     exit_flag = False
     while not exit_flag:
