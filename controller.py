@@ -38,16 +38,24 @@ class Controller():
 
 
     def read(self): # return the buttons/triggers that you care about in this methode
-        lx = self.LeftJoystickX
-        ly = self.LeftJoystickY
-        a = self.A
-        b = self.B # b=1, x=2
+
+        lx = self.LeftJoystickY
+        ly = self.LeftJoystickX
+        rx = self.RightJoystickY
+        ry = self.RightJoystickX
+        lt = self.LeftTrigger
+        rt = self.RightTrigger
+        lb = self.LeftBumper
         rb = self.RightBumper
+        a = self.A
+        x = self.X
+        y = self.Y
+        b = self.B
 
         #self.TimeStamp = time.time()
         #tstamp = self.TimeStamp
         
-        return [lx, ly, a, b, rb]    
+        return [lx, ly, a, x, y, b, rt, rb, lt, lb, rx, ry]    
 
 
     def _monitor_controller(self):
