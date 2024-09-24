@@ -47,10 +47,10 @@ class Controller():
         rt = self.RightTrigger
         lb = self.LeftBumper
         rb = self.RightBumper
-        a = self.A
-        x = self.X
-        y = self.Y
-        b = self.B
+        a  = self.A
+        x  = self.X
+        y  = self.Y
+        b  = self.B
 
         #self.TimeStamp = time.time()
         #tstamp = self.TimeStamp
