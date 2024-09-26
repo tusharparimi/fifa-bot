@@ -21,6 +21,7 @@ class Simulator():
         self.simulate = True if self.simulate is False else False
 
     def play(self):
+        press_duration = 0.1
         while True:
             # time.sleep(0.2)
             if keyboard.is_pressed('esc'):
@@ -29,33 +30,57 @@ class Simulator():
             if keyboard.is_pressed('t'):
                 print("toggle !!!")
                 self.toggle()
-                time.sleep(0.01)
+                time.sleep(0.1)
                 continue
-                #self.fifa_window.activate()
-                #elif not self.simulate: del gamepad
             if self.simulate:
+                # AI sim
                 # fake inference for now till I have my precious model
                 print("AI")
                 pass
             else:
-            # manual
+                # Manual sim
                 print('Manual')
-                if self.cn_object.A != 0.0:
-                    self.gamepad.press_button(button=vg.XUSB_BUTTON.XUSB_GAMEPAD_A)  # press the A button
-                    # print("A")           
-                if self.cn_object.B != 0.0:
-                    self.gamepad.press_button(button=vg.XUSB_BUTTON.XUSB_GAMEPAD_B)    
-                    # print("B")
-                #if self.cn_object.LeftJoystickX != 0.0 or self.cn_object.LeftJoystickY != 0.0:
-                self.gamepad.left_joystick_float( \
-                    x_value_float=self.cn_object.LeftJoystickX, \
-                        y_value_float=self.cn_object.LeftJoystickY)
-                #print("Left stick")
+
+                # time tracked buttons
+                if self.cn_object.A.press_duration:
+                    self.gamepad.press_button(button=vg.XUSB_BUTTON.XUSB_GAMEPAD_A)
+                    press_duration = self.cn_object.A.press_duration \
+                        if self.cn_object.A.press_duration else 0.1
+                if self.cn_object.Y.press_duration:
+                    self.gamepad.press_button(button=vg.XUSB_BUTTON.XUSB_GAMEPAD_Y)
+                    press_duration = self.cn_object.Y.press_duration \
+                        if self.cn_object.Y.press_duration else 0.1
+                if self.cn_object.X.press_duration:
+                    self.gamepad.press_button(button=vg.XUSB_BUTTON.XUSB_GAMEPAD_X)
+                    press_duration = self.cn_object.X.press_duration \
+                        if self.cn_object.X.press_duration else 0.1
+                if self.cn_object.B.press_duration:
+                    self.gamepad.press_button(button=vg.XUSB_BUTTON.XUSB_GAMEPAD_B)
+                    press_duration = self.cn_object.B.press_duration \
+                        if self.cn_object.B.press_duration else 0.1             
                 self.gamepad.update()
-                time.sleep(0.1)
+                time.sleep(press_duration)
                 self.gamepad.reset()
                 self.gamepad.update()
                 time.sleep(0.1)
+
+                # normie buttons
+                self.gamepad.left_joystick_float( \
+                    x_value_float=self.cn_object.LeftJoystickX, \
+                        y_value_float=self.cn_object.LeftJoystickY)
+                self.gamepad.right_joystick_float( \
+                    x_value_float=self.cn_object.RightJoystickX, \
+                        y_value_float=self.cn_object.RightJoystickY)
+                self.gamepad.left_trigger_float(value_float=self.cn_object.LeftTrigger)
+                self.gamepad.right_trigger_float(value_float=self.cn_object.RightTrigger)
+                if self.cn_object.LeftBumper != 0.0:
+                    self.gamepad.press_button(button=vg.XUSB_BUTTON.XUSB_GAMEPAD_LEFT_SHOULDER)  
+                if self.cn_object.RightBumper != 0.0:
+                    self.gamepad.press_button(button=vg.XUSB_BUTTON.XUSB_GAMEPAD_RIGHT_SHOULDER)  
+                self.gamepad.update()
+                time.sleep(0.1)
+                
+                
 
     
 if __name__ == '__main__':
