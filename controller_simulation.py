@@ -12,11 +12,29 @@ import math
 # (preferably a toggle 't' button to switch between manual and AI)
 
 class Simulator():
-    def __init__(self) -> None:
+    KEYS = ['a', 'b', 'x', 'y', 'lb', 'rb']
+    def __init__(self, controller_type='xbox') -> None:
         self.simulate = False
         self.cn_object = cn.Controller()
-        self.gamepad = vg.VX360Gamepad()
-    
+        self.buttons = {k:None for k in Simulator.KEYS}
+        #print(self.buttons)
+        if controller_type == 'xbox': 
+            self.gamepad = vg.VX360Gamepad()
+            self.buttons['a']  = vg.XUSB_BUTTON.XUSB_GAMEPAD_A
+            self.buttons['y']  = vg.XUSB_BUTTON.XUSB_GAMEPAD_Y
+            self.buttons['x']  = vg.XUSB_BUTTON.XUSB_GAMEPAD_X
+            self.buttons['b']  = vg.XUSB_BUTTON.XUSB_GAMEPAD_B
+            self.buttons['lb'] = vg.XUSB_BUTTON.XUSB_GAMEPAD_LEFT_SHOULDER
+            self.buttons['rb'] = vg.XUSB_BUTTON.XUSB_GAMEPAD_RIGHT_SHOULDER
+        else: 
+            self.gamepad = vg.VDS4Gamepad()
+            self.buttons['a']  = vg.DS4_BUTTONS.DS4_BUTTON_CROSS
+            self.buttons['y']  = vg.DS4_BUTTONS.DS4_BUTTON_TRIANGLE
+            self.buttons['x']  = vg.DS4_BUTTONS.DS4_BUTTON_SQUARE
+            self.buttons['b']  = vg.DS4_BUTTONS.DS4_BUTTON_CIRCLE
+            self.buttons['lb'] = vg.DS4_BUTTONS.DS4_BUTTON_SHOULDER_LEFT
+            self.buttons['rb'] = vg.DS4_BUTTONS.DS4_BUTTON_SHOULDER_RIGHT
+
     def toggle(self):
         self.simulate = True if self.simulate is False else False
 
@@ -43,19 +61,19 @@ class Simulator():
 
                 # time tracked buttons
                 if self.cn_object.A.press_duration:
-                    self.gamepad.press_button(button=vg.XUSB_BUTTON.XUSB_GAMEPAD_A)
+                    self.gamepad.press_button(button=self.buttons['a'])
                     press_duration = self.cn_object.A.press_duration \
                         if self.cn_object.A.press_duration else 0.1
                 if self.cn_object.Y.press_duration:
-                    self.gamepad.press_button(button=vg.XUSB_BUTTON.XUSB_GAMEPAD_Y)
+                    self.gamepad.press_button(button=self.buttons['y'])
                     press_duration = self.cn_object.Y.press_duration \
                         if self.cn_object.Y.press_duration else 0.1
                 if self.cn_object.X.press_duration:
-                    self.gamepad.press_button(button=vg.XUSB_BUTTON.XUSB_GAMEPAD_X)
+                    self.gamepad.press_button(button=self.buttons['x'])
                     press_duration = self.cn_object.X.press_duration \
                         if self.cn_object.X.press_duration else 0.1
                 if self.cn_object.B.press_duration:
-                    self.gamepad.press_button(button=vg.XUSB_BUTTON.XUSB_GAMEPAD_B)
+                    self.gamepad.press_button(button=self.buttons['b'])
                     press_duration = self.cn_object.B.press_duration \
                         if self.cn_object.B.press_duration else 0.1             
                 self.gamepad.update()
@@ -74,9 +92,9 @@ class Simulator():
                 self.gamepad.left_trigger_float(value_float=self.cn_object.LeftTrigger)
                 self.gamepad.right_trigger_float(value_float=self.cn_object.RightTrigger)
                 if self.cn_object.LeftBumper != 0.0:
-                    self.gamepad.press_button(button=vg.XUSB_BUTTON.XUSB_GAMEPAD_LEFT_SHOULDER)  
+                    self.gamepad.press_button(button=self.buttons['lb'])  
                 if self.cn_object.RightBumper != 0.0:
-                    self.gamepad.press_button(button=vg.XUSB_BUTTON.XUSB_GAMEPAD_RIGHT_SHOULDER)  
+                    self.gamepad.press_button(button=self.buttons['rb'])  
                 self.gamepad.update()
                 time.sleep(0.1)
                 
@@ -84,7 +102,7 @@ class Simulator():
 
     
 if __name__ == '__main__':
-    sim = Simulator()
+    sim = Simulator('xbox')
     sim.play()
 
 
